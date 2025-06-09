@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEALTH CTRL+ | BMI Calculator</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa; /* Light grey background */
+            color: #495057; /* Softer text color */
+        }
+
+        .navbar {
+            background-color: #ffffff; /* White navbar */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: #28a745 !important; /* Green brand color */
+        }
+
+        .nav-link {
+            color: #555 !important;
+            border: none !important; /* Remove borders from nav-tabs */
+            margin: 0 5px;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: #28a745 !important; /* Green for active/hover */
+            border-bottom: 2px solid #28a745 !important; /* Underline effect */
+            background-color: transparent !important; /* Ensure no bg color */
+        }
+
+        .tab-content {
+            padding: 40px 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            min-height: 500px; 
+        }
+
+        .head {
+            color: #28a745; /* Green heading */
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-outline-primary {
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+         .btn-outline-primary:hover,
+         .btn-outline-primary:focus {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .modal-content {
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            background-color: #28a745;
+            color: #fff;
+            border-top-left-radius: 7px; /* Adjusted for border */
+            border-top-right-radius: 7px; /* Adjusted for border */
+        }
+        
+        .btn-close { 
+            filter: invert(1) grayscale(100%) brightness(200%); 
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-container {
+            background-color: #e9f5ee; /* Light green */
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-style: italic;
+            color: #155724; /* Darker green for text */
+        }
+
+        #bmi .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        #bmi .form-control, #bmi .form-select {
+            border-radius: 0.25rem;
+        }
+
+        #bmi #calculateBtn {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+        }
+
+        #bmiResult {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            background-color: #e9ecef;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+        
+        #signInForm.hide, #signUpForm.hide {
+            display: none;
+        }
+        #signInForm.show, #signUpForm.show {
+            display: block;
+        }
+
+        /* Ensure nav-tabs don't look like standard tabs */
+        .navbar .nav-tabs {
+            border-bottom: none;
+        }
+        .navbar .nav-tabs .nav-link {
+            border: none;
+            border-radius: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#">HEALTH CTRL+</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto nav nav-tabs border-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="information-tab" data-bs-toggle="tab" href="#information" role="tab" aria-controls="information" aria-selected="false">Information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="bmi-tab" data-bs-toggle="tab" href="#bmi" role="tab" aria-controls="bmi" aria-selected="false">Know your BMI</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tips-tab" data-bs-toggle="tab" href="#tips" role="tab" aria-controls="tips" aria-selected="false">Tips</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#hist" role="tab" aria-controls="hist" aria-selected="false">History</a>
+                        </li>
+                         <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                             <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In / Sign Up</button>
+                         </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Welcome!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                         <button class="btn btn-primary" id="showSignInBtn">Sign In</button>
+                         <button class="btn btn-secondary" id="showSignUpBtn">Sign Up</button>
+                    </div>
+
+                    <div id="signInForm" class="show">
+                        <h4 class="text-center mb-3">Sign In</h4>
+                        <div class="mb-3">
+                            <label for="signInEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="signInEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signInPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signInPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="handleSignIn()">Sign In</button>
+                    </div>
+
+                    <div id="signUpForm" class="hide">
+                        <h4 class="text-center mb-3">Sign Up</h4>
+                        <div class="mb-3">
+                            <label for="signUpEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="signUpEmail" placeholder="name@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signUpPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signUpPassword" placeholder="Create a password" required>
+                        </div>
+                         <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter your password" required>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="handleSignUp()">Sign Up</button>
+                    </div>
+                </div>
+                 <div class="modal-footer justify-content-center">
+                    <small class="text-muted">Manage your health journey.</small>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container my-5">
+        <div class="tab-content" id="myTabContent">
+
+            <section class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="text-center">
+                    <h1 class="head display-4">HEALTH CTRL+</h1>
+                    <p class="lead">Track your health with our easy-to-use BMI Calculator and embark on a journey towards a healthier lifestyle!</p>
+                    <button class="btn btn-primary btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Get Started - Sign In / Sign Up
+                    </button>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title text-success"><i class="bi bi-info-circle-fill me-2"></i>Did You Know?</h3>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Adults with a BMI between 18.5 and 24.9 are generally considered to have a healthy weight.</li>
+                                    <li class="list-group-item">Regular exercise and hydration improve your overall BMI score.</li>
+                                    <li class="list-group-item">BMI is just one measure of health; it’s important to consider other factors too.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-6">
+                         <div class="card h-100">
+                             <div class="card-body">
+                                 <h3 class="card-title text-success"><i class="bi bi-chat-quote-fill me-2"></i>Quote of the Day</h3>
+                                 <div class="quote-container">
+                                     <p id="quoteOfTheDay">"The greatest wealth is health." - Virgil</p>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tab-pane fade" id="bmi" role="tabpanel" aria-labelledby="bmi-tab">
+                 <h1 class="head">BMI Calculator</h1>
+                 <div class="row justify-content-center">
+                     <div class="col-lg-6 col-md-8">
+                         <div class="card p-4">
+                             <div class="input-group mb-3">
+                                 <label class="input-group-text" for="heightUnit">Height</label>
+                                 <select class="form-select" id="heightUnit">
+                                     <option value="cm">cm</option>
+                                     <option value="in">in</option>
+                                 </select>
+                                 <input type="number" class="form-control" id="height" placeholder="Enter height" required />
+                             </div>
+
+                             <div class="input-group mb-4">
+                                 <label class="input-group-text" for="weightUnit">Weight</label>
+                                 <select class="form-select" id="weightUnit">
+                                     <option value="kg">kg</option>
+                                     <option value="lb">lb</option>
+                                 </select>
+                                 <input type="number" class="form-control" id="weight" placeholder="Enter weight" required />
+                             </div>
+
+                             <button id="calculateBtn" class="btn btn-primary btn-lg mb-4">Calculate BMI</button>
+
+                             <div class="input-group mb-3">
+                                <span class="input-group-text" style="width: 120px;">Your BMI is:</span>
+                                <input type="text" class="form-control form-control-lg" id="bmiResult" readonly />
+                             </div>
+                              <div class="text-center">
+                                  <p id="bmiObservation" class="fs-5 fw-bold"></p>
+                              </div>
+                         </div>
+                     </div>
+                 </div>
+            </section>
+
+            <section class="tab-pane fade" id="information" role="tabpanel" aria-labelledby="information-tab">
+                <h2>About BMI</h2>
+                <p class="lead">Body Mass Index (BMI) is a medical screening tool that measures the ratio of your height to your weight to estimate the amount of body fat you have. It helps understand how body fat impacts health and aids conversations with healthcare providers about reducing disease risks and improving wellness.</p>
+                
+                <h3 class="mt-4">How BMI is Measured</h3>
+                <div class="formula-container bg-light p-3 rounded mb-4">
+                    <p class="fs-5">Imperial: <code>BMI = (Weight (lb) / [Height (in)]²) × 703</code></p>
+                    <p class="fs-5">Metric: <code>BMI = (Weight (kg) / [Height (m)]²)</code></p>
+                </div>
+
+                <h3>BMI Categories (Adults):</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-success">
+                            <tr>
+                                <th>BMI Measurement</th>
+                                <th>Weight Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Below 18.5</td><td>Underweight</td></tr>
+                            <tr><td>18.5 – 24.9</td><td>Normal weight</td></tr>
+                            <tr><td>25.0 – 29.9</td><td>Overweight</td></tr>
+                            <tr><td>30.0 – 34.9</td><td>Obese (Class I)</td></tr>
+                            <tr><td>35.0 – 39.9</td><td>Obese (Class II)</td></tr>
+                            <tr><td>40+</td><td>Obese (Class III)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section class="tab-pane fade" id="tips" role="tabpanel" aria-labelledby="tips-tab">
+                 <h2>Health Tips for a Healthy BMI</h2>
+                 <p>Maintaining a healthy BMI involves a combination of a balanced diet, regular physical activity, and healthy lifestyle choices. Here are some actionable tips:</p>
+                 <div class="list-group">
+                    <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">1. Exercise Regularly</h5>
+                        <p class="mb-1">Aim for at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous-intensity activity weekly, plus strength training twice a week.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">2. Eat a Balanced Diet</h5>
+                        <p class="mb-1">Focus on fruits, vegetables, lean proteins, and whole grains. Limit processed foods, sugary drinks, and unhealthy fats.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">3. Practice Portion Control</h5>
+                        <p class="mb-1">Be mindful of serving sizes. Using smaller plates can help manage portions effectively.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">4. Stay Hydrated</h5>
+                        <p class="mb-1">Drink plenty of water throughout the day. It helps with metabolism and can make you feel full, reducing overeating.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">5. Get Sufficient Sleep</h5>
+                        <p class="mb-1">Aim for 7-9 hours of quality sleep per night. Poor sleep can affect hormones that regulate appetite.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">6. Manage Stress</h5>
+                        <p class="mb-1">Find healthy ways to cope with stress, such as meditation, yoga, or hobbies, as stress can lead to unhealthy eating habits.</p>
+                    </div>
+                     <div class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">7. Monitor Your Progress</h5>
+                        <p class="mb-1">Keep track of your BMI, but also consider how you feel and other health markers. Consult a healthcare provider for personalized advice.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tab-pane fade" id="hist" role="tabpanel" aria-labelledby="history-tab">
+                <h2>Your BMI History</h2>
+                <div id="bmiHistory" class="mt-3">
+                    <div class="alert alert-info" role="alert" id="noHistoryMessage">
+                        Sign in and calculate your BMI to see your history here.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="text-center text-muted py-4 mt-5 bg-light">
+        <p>&copy; 2025 HEALTH CTRL+ | Your Partner in Wellness</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="scrip.js"></script>
+
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <script src="scrip.js" defer></script>
+    <style>
+        .head {
+            font-weight: bolder;
+            color: #1c6434;
+            font-size: 50px;
+            font-family: "Underdog", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+        /* Custom styles for modal (if any, ensure they don't conflict with Bootstrap) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1050; /* Higher z-index for Bootstrap modals */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: hidden; /* Prevent background scroll when modal is open */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            /* Adjusted width for better responsiveness within Bootstrap modal structure */
+            width: 90%; /* Let Bootstrap's modal-dialog handle actual width */
+            max-width: 500px; /* Limit max-width for better readability on very wide screens */
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Health App</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#home" onclick="showSection('home')">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#information" onclick="showSection('information')">Information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#bmi" onclick="showSection('bmi')">Know your BMI</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#tips" onclick="showSection('tips')">Tips</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#history" onclick="showSection('hist')">History</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Authentication</h5>
+                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="authOptions">
+                    <button id='loginHand' class="btn btn-primary mb-3" onclick="loginHandler()">Sign In / Sign Up</button>
+
+                    <div id="signInForm" class='signIn' style="display: none;">
+                        <h2 class="mb-3">Sign In</h2>
+                        <div class="mb-3">
+                            <label for="signInEmail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="signInEmail" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signInPassword" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="signInPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button class="btn btn-success" onclick="handleSignIn()">Sign In</button>
+                    </div>
+
+                    <div id="signUpForm" class='signUp' style="display: none;">
+                        <h2 class="mb-3">Sign Up</h2>
+                        <div class="mb-3">
+                            <label for="signUpEmail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="signUpEmail" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signUpPassword" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="signUpPassword" placeholder="Enter your password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter your password" required>
+                        </div>
+                        <button class="btn btn-success" onclick="handleSignUp()">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container-fluid mt-4">
+        <section id="home" class="tab-content">
+            <h1 class="head text-center mb-4">HEALTH CTRL+</h1>
+            <div class="intro text-center mb-5">
+                <p class="lead">Track your health with our easy-to-use BMI Calculator and embark on a journey towards a healthier lifestyle!</p>
+            </div>
+
+            <div class="fun-facts card p-4 mb-5 mx-auto" style="max-width: 800px;">
+                <h3 class="card-title text-center mb-3">Did You Know?</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Adults with a BMI between 18.5 and 24.9 are generally considered to have a healthy weight.</li>
+                    <li class="list-group-item">Regular exercise and hydration improve your overall BMI score.</li>
+                    <li class="list-group-item">BMI is just one measure of health; it’s important to consider other factors too.</li>
+                </ul>
+            </div>
+            <div class="text-center mb-4">
+                <button class="btn btn-primary btn-lg" onclick="openModal()">Sign In / Sign Up</button>
+            </div>
+            <div class="quote-container text-center">
+                <p id="quoteOfTheDay" class="fst-italic text-muted"></p>
+            </div>
+        </section>
+
+        <section id="bmi" class="tab-content" style="display:none;">
+            <div class="container py-4">
+                <h1 class="heat text-center mb-4">BMI Calculator</h1>
+
+                <div class="input-group mb-3">
+                    <label for="height" class="input-group-text">Height:</label>
+                    <select id="heightUnit" class="form-select">
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="in">Inches (in)</option>
+                    </select>
+                    <input type="number" id="height" class="form-control" placeholder="Enter height" required />
+                </div>
+
+                <div class="input-group mb-3">
+                    <label for="weight" class="input-group-text">Weight:</label>
+                    <select id="weightUnit" class="form-select">
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lb">Pounds (lb)</option>
+                    </select>
+                    <input type="number" id="weight" class="form-control" placeholder="Enter weight" required />
+                </div>
+
+                <div class="d-grid gap-2 mb-4">
+                    <button id="calculateBtn" class="btn btn-success btn-lg">Calculate BMI</button>
+                </div>
+
+                <div class="result-group mb-3">
+                    <label for="bmiResult" class="form-label">Your BMI:</label>
+                    <input type="text" id="bmiResult" class="form-control" readonly />
+                </div>
+            </div>
+        </section>
+
+        <section id="information" class="tab-content" style="display:none;">
+            <h2 class="mb-3">About BMI</h2>
+            <p>BMI is a medical screening tool that measures the ratio of your height to your weight to estimate the amount of body fat you have. It helps understand how body fat impacts health and aids conversations with healthcare providers about reducing disease risks and improving wellness.</p>
+            <h3 class="mt-4 mb-3">How BMI is measured</h3>
+            <div class="formula-container mb-4">
+                <p id="formula1" class="text-muted">BMI = (Weight (lb) / [Height (in)]² × 703)</p>
+                <p id="formula2" class="text-muted">BMI = (Weight (kg) / [Height (m)]²)</p>
+            </div>
+            <h3 class="mt-4 mb-3">BMI Categories (Adults):</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>BMI Measurement</th>
+                            <th>Weight Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Below 18.5</td>
+                            <td>Underweight</td>
+                        </tr>
+                        <tr>
+                            <td>18.5 – 24.9</td>
+                            <td>Normal weight</td>
+                        </tr>
+                        <tr>
+                            <td>25.0 – 29.9</td>
+                            <td>Overweight</td>
+                        </tr>
+                        <tr>
+                            <td>30.0 – 34.9</td>
+                            <td>Obese (Class I)</td>
+                        </tr>
+                        <tr>
+                            <td>35.0 – 39.9</td>
+                            <td>Obese (Class II)</td>
+                        </tr>
+                        <tr>
+                            <td>40+</td>
+                            <td>Obese (Class III)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tips" class="tab-content" style="display:none;">
+            <h2 class="mb-3">Health Tips for Maintaining a Healthy BMI</h2>
+            <ol class="list-group list-group-numbered">
+                <li class="list-group-item">Exercise regularly—aim for 150 minutes of activity weekly.</li>
+                <li class="list-group-item">Stay hydrated—drink water to regulate appetite and metabolism.</li>
+                <li class="list-group-item">Cut out processed foods—focus on nutrient-dense options.</li>
+                <li class="list-group-item">Get sufficient sleep—aim for seven or more hours each night.</li>
+                <li class="list-group-item">Maintain a well-balanced diet—fruits, vegetables, lean protein, and whole grains.</li>
+                <li class="list-group-item">Get an accurate BMI reading through a healthcare provider.</li>
+                <li class="list-group-item">Monitor daily movement—track activities with fitness devices.</li>
+                <li class="list-group-item">Practice portion control—use smaller plates to avoid overeating.</li>
+                <li class="list-group-item">Limit added sugars and unhealthy fats in meals.</li>
+                <li class="list-group-item">Keep a log of what is and isn’t working to refine habits.</li>
+            </ol>
+        </section>
+
+        <section id="hist" class="tab-content" style="display:none;">
+            <h2 class="mb-3">History</h2>
+            <div id="bmiHistory" class="card card-body">
+                <p id="noHistoryMessage" class="text-muted">No history available.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html> -->
